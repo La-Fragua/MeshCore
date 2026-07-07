@@ -32,6 +32,11 @@ bool ntp_synced = false;
 unsigned long wg_last_alive = 0;         // ultima senal de vida conocida (o inicio de WG)
 unsigned long wg_last_soft_restart = 0;
 
+// Accessors para que el comando CLI "bridge" (en MyMesh) reporte el estado de WireGuard
+// sin acoplar MyMesh a los globales de este archivo.
+bool fraguaWgUp() { return wg_initialized; }
+uint32_t fraguaWgAgeSecs() { return wg_last_alive ? (millis() - wg_last_alive) / 1000 : 0; }
+
 void setupTime() {
   configTime(0, 0, "pool.ntp.org", "time.nist.gov");
 

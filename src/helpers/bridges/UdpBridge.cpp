@@ -95,7 +95,14 @@ void UdpBridge::loop() {
   }
 
   // Magic valido: el peer esta vivo (keepalive o paquete real).
-  _last_peer_rx = millis();
+  {
+    unsigned long now = millis();
+    // Nueva conexion o reconexion tras una caida (mas de ~3 keepalives sin señal).
+    if (_last_peer_rx == 0 || (now - _last_peer_rx) > 70000UL) {
+      _peer_up_since = now;
+    }
+    _last_peer_rx = now;
+  }
 
   if (packetSize == (int)BRIDGE_MAGIC_SIZE) {
     return; // keepalive del peer, nada mas que hacer

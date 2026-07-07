@@ -57,6 +57,7 @@ private:
   unsigned long _last_bind_attempt = 0;
   unsigned long _last_keepalive_tx = 0;
   unsigned long _last_peer_rx = 0;   // millis() del ultimo datagrama con magic valido del peer
+  unsigned long _peer_up_since = 0;  // millis() en que arranco la racha de conexion actual con el peer
 
   static const size_t MAX_UDP_PACKET_SIZE = 512;
   static const size_t MAX_PAYLOAD_SIZE = MAX_UDP_PACKET_SIZE - (BRIDGE_MAGIC_SIZE + BRIDGE_CHECKSUM_SIZE);
@@ -95,6 +96,10 @@ public:
   // millis() del ultimo datagrama (keepalive o paquete) con magic valido recibido del peer.
   // 0 = nunca. Senal de vida para el watchdog de WireGuard en main.cpp.
   unsigned long lastPeerRx() const { return _last_peer_rx; }
+
+  // millis() en que arranco la racha de conexion actual con el peer (para reportar
+  // "conectado hace X"). 0 = nunca hubo conexion.
+  unsigned long peerUpSince() const { return _peer_up_since; }
 };
 
 #endif

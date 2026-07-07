@@ -1,6 +1,15 @@
 #include "MyMesh.h"
 #include <algorithm>
 
+#if defined(WITH_UDP_BRIDGE)
+#include <WiFi.h>
+#if defined(WG_ADDRESS)
+// Definidos en main.cpp (guardados por WG_ADDRESS). Reportan el estado de WireGuard.
+extern bool fraguaWgUp();
+extern uint32_t fraguaWgAgeSecs();
+#endif
+#endif
+
 /* ------------------------------ Config -------------------------------- */
 
 #ifndef LORA_FREQ
@@ -1260,6 +1269,24 @@ void MyMesh::handleCommand(uint32_t sender_timestamp, char *command, char *reply
       sendNodeDiscoverReq();
       strcpy(reply, "OK - Discover sent");
     }
+#if defined(WITH_UDP_BRIDGE)
+  } else if (strcmp(command, "bridge") == 0) {
+    // Estado del puente para FraguaBoard. Linea compacta de tokens key=val.
+    unsigned long now = millis();
+    unsigned long peer_rx = bridge.lastPeerRx();
+    unsigned long peer_age = peer_rx ? (now - peer_rx) / 1000 : 0;
+    bool peer_up = peer_rx != 0 && (now - peer_rx) < 70000UL;
+    unsigned long up_secs = (peer_up && bridge.peerUpSince()) ? (now - bridge.peerUpSince()) / 1000 : 0;
+    int wifi_ok = (WiFi.status() == WL_CONNECTED) ? 1 : 0;
+#if defined(WG_ADDRESS)
+    int wg_ok = fraguaWgUp() ? 1 : 0;
+#else
+    int wg_ok = 0;
+#endif
+    sprintf(reply, "wifi=%d ip=%s wg=%d peer=%d peer_age=%lu up=%lu bridge=%d",
+            wifi_ok, WiFi.localIP().toString().c_str(), wg_ok,
+            peer_up ? 1 : 0, peer_age, up_secs, bridge.isRunning() ? 1 : 0);
+#endif
   } else{
     _cli.handleCommand(sender_timestamp, command, reply);  // common CLI commands
   }
