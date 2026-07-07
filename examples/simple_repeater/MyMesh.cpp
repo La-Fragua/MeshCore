@@ -1283,9 +1283,10 @@ void MyMesh::handleCommand(uint32_t sender_timestamp, char *command, char *reply
 #else
     int wg_ok = 0;
 #endif
-    sprintf(reply, "wifi=%d ip=%s wg=%d peer=%d peer_age=%lu up=%lu bridge=%d",
+    sprintf(reply, "wifi=%d ip=%s wg=%d peer=%d peer_age=%lu up=%lu bridge=%d tx=%lu rx=%lu",
             wifi_ok, WiFi.localIP().toString().c_str(), wg_ok,
-            peer_up ? 1 : 0, peer_age, up_secs, bridge.isRunning() ? 1 : 0);
+            peer_up ? 1 : 0, peer_age, up_secs, bridge.isRunning() ? 1 : 0,
+            (unsigned long)bridge.bridgedTx(), (unsigned long)bridge.bridgedRx());
 #endif
   } else{
     _cli.handleCommand(sender_timestamp, command, reply);  // common CLI commands

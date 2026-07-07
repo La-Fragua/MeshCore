@@ -132,6 +132,7 @@ void UdpBridge::loop() {
   if (!pkt) return;
 
   if (pkt->readFrom(decrypted + BRIDGE_CHECKSUM_SIZE, (uint8_t)payloadLen)) {
+    if (_bridged_rx < UINT32_MAX) _bridged_rx++;
     onPacketReceived(pkt);
   } else {
     _mgr->free(pkt);
@@ -178,6 +179,7 @@ void UdpBridge::txFrame(const uint8_t *meshPacket, uint8_t len) {
   _udp.beginPacket(_remote_ip, _remote_port);
   _udp.write(buffer, totalPacketSize);
   if (_udp.endPacket()) {
+    if (_bridged_tx < UINT32_MAX) _bridged_tx++;
     BRIDGE_DEBUG_PRINTLN("TX, len=%d\n", len);
   } else {
     BRIDGE_DEBUG_PRINTLN("TX FAILED!\n");

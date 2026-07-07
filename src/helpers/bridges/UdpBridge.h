@@ -100,6 +100,14 @@ public:
   // millis() en que arranco la racha de conexion actual con el peer (para reportar
   // "conectado hace X"). 0 = nunca hubo conexion.
   unsigned long peerUpSince() const { return _peer_up_since; }
+
+  // Packets bridged (mesh→UDP TX, UDP→mesh RX). uint32_t won't overflow at
+  // typical rates (~1 pkt/s = 136 years). Caps at UINT32_MAX on wrap.
+  uint32_t bridgedTx() const { return _bridged_tx; }
+  uint32_t bridgedRx() const { return _bridged_rx; }
+private:
+  uint32_t _bridged_tx = 0;
+  uint32_t _bridged_rx = 0;
 };
 
 #endif
