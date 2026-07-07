@@ -859,6 +859,9 @@ MyMesh::MyMesh(mesh::MainBoard &board, mesh::Radio &radio, mesh::MillisecondCloc
 #if defined(WITH_ESPNOW_BRIDGE)
       , bridge(&_prefs, _mgr, &rtc)
 #endif
+#if defined(WITH_UDP_BRIDGE)
+      , bridge(&_prefs, _mgr, &rtc)
+#endif
 {
   last_millis = 0;
   uptime_millis = 0;

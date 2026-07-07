@@ -1,0 +1,14 @@
+; Copia este archivo a platformio.local.ini y completa con los valores reales.
+;   cp platformio.local.ini.example platformio.local.ini
+; platformio.local.ini esta en .gitignore, asi que los secretos no se suben al repo.
+[secrets]
+fragua_wifi_ssid = TU_SSID_FRAGUA
+fragua_wifi_pwd = TU_PASSWORD_FRAGUA
+remote_wifi_ssid = TU_SSID_BALCON
+remote_wifi_pwd = TU_PASSWORD_BALCON
+remote_admin_pwd = TU_ADMIN_PASSWORD
+remote_wg_priv = TU_CLAVE_PRIVADA_WIREGUARD_NODO_REMOTO
+fragua_wg_priv = TU_CLAVE_PRIVADA_WIREGUARD_NODO_FRAGUA
+wg_peer_public_key = CLAVE_PUBLICA_DEL_PEER_WIREGUARD
+wg_peer_endpoint = ENDPOINT_DEL_PEER
+wg_peer_port = PUERTO_DEL_PEER
