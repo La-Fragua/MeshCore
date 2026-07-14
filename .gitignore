@@ -17,3 +17,7 @@ compile_commands.json
 .venv/
 venv/
 platformio.local.ini
+# FraguaMesh: config con secretos y artefactos generados por flash.py
+fragua-mesh.toml
+platformio.fragua.ini
+.fragua-flash-state.json

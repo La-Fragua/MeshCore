@@ -1,0 +1,53 @@
+# Config de despliegue de los bridges FraguaMesh.
+#
+# Copiá este archivo a fragua-mesh.toml (gitignored) y completá con los valores reales.
+# NUNCA pongas valores reales (SSIDs, claves, coordenadas, endpoints) en este .example:
+# es publico. flash.py lee fragua-mesh.toml, genera platformio.fragua.ini y flashea.
+#
+# [shared]     -> aplica a todos los nodos (hub, region LoRa, WireGuard del server).
+# [nodes.<id>] -> un bridge fisico. El <id> se vuelve el env pio "fragua_<id>".
+
+[shared]
+admin_password = "CHANGEME"      # ADMIN_PASSWORD (login CLI de administracion)
+udp_port = 5001                  # UDP_REMOTE_PORT y UDP_LOCAL_PORT (igual al del reflector)
+reflector_ip = "10.0.0.1"        # UDP_REMOTE_IP de TODOS los nodos: la IP del hub reflector
+max_neighbours = 50
+bridge_debug = true              # BRIDGE_DEBUG=1 (logs de bridge por serial)
+cpu_freq = 240                   # ESP32_CPU_FREQ
+
+# Region LoRa. Siempre se emite (garantiza region poblada). Preset US/America de MeshCore.
+[shared.lora]
+freq = 910.525                   # MHz, banda ISM US 902-928
+bw = 250                         # kHz
+sf = 10                          # spreading factor
+cr = 5                           # coding rate
+
+# WireGuard del server (peer comun a todos los nodos).
+[shared.wireguard]
+peer_endpoint = "vpn.example.com"   # host/IP del server WireGuard
+peer_port = 51820
+peer_public_key = "CHANGEME"        # clave publica del server (base64, 44 chars)
+keepalive = 25                      # WG_KEEPALIVE (segundos)
+watchdog_soft_secs = 180            # WG_WATCHDOG_SOFT_SECS
+
+# ── Nodos ──────────────────────────────────────────────────────────────────────
+
+[nodes.nodo-a]
+board = "heltec_v2"              # heltec_v2 | heltec_v3
+name = "Bridge A"                # ADVERT_NAME
+lat = 0.0                        # ADVERT_LAT (completá con la ubicacion real)
+lon = 0.0                        # ADVERT_LON
+wifi_ssid = "CHANGEME"
+wifi_password = "CHANGEME"
+wg_address = "10.0.0.4"          # WG_ADDRESS (IP del nodo dentro del tunel, unica)
+wg_private_key = "CHANGEME"      # WG_PRIVATE_KEY (base64, 44 chars)
+
+[nodes.nodo-b]
+board = "heltec_v2"
+name = "Bridge B"
+lat = 0.0
+lon = 0.0
+wifi_ssid = "CHANGEME"
+wifi_password = "CHANGEME"
+wg_address = "10.0.0.3"
+wg_private_key = "CHANGEME"
